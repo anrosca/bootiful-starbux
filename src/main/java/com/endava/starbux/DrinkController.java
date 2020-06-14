@@ -1,6 +1,13 @@
 package com.endava.starbux;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,22 +15,28 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drinks")
 public class DrinkController {
     private final DrinkService drinkService;
+    private final DrinkResourceAssembler drinkResourceAssembler;
+    private final PagedResourcesAssembler pagedResourcesAssembler;
 
     @GetMapping
-    public List<Drink> findAll() {
-        return drinkService.findAll();
+    public CollectionModel<Drink> findAll(@PageableDefault Pageable pageable) {
+        Page<Drink> all = drinkService.findAll(pageable);
+        return pagedResourcesAssembler.toModel(all, drinkResourceAssembler);
     }
 
     @GetMapping("{id}")
-    public Drink findById(@PathVariable long id) {
-        return drinkService.findById(id);
+    public EntityModel<Drink> findById(@PathVariable long id) {
+        Drink drink = drinkService.findById(id);
+        return drinkResourceAssembler.toModel(drink);
     }
 
     @PostMapping

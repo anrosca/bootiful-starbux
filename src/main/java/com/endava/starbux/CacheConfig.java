@@ -1,5 +1,6 @@
 package com.endava.starbux;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Configuration
 @EnableCaching
+@ConditionalOnClass(RedisTemplate.class)
 @ConditionalOnProperty(name = "cache.enabled", havingValue = "true")
 public class CacheConfig {
 

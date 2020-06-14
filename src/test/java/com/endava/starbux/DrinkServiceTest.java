@@ -16,7 +16,7 @@ public class DrinkServiceTest {
 
     @BeforeEach
     void setUp() {
-        drinkService = new DrinkService(drinkRepository);
+//        drinkService = new DrinkService(drinkRepository);
     }
 
     @Test
